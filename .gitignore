@@ -192,3 +192,12 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+*.onnx
+iac/secrets/
+.terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+*.hcl
+*.tfvars.json

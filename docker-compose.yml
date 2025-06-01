@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+    environment:
+      SESSION_SECRET_KEY: thisisasecretkey
+      IS_DOCKER_CONTAINER: yes
+
+networks:
+  app_network:
+    driver: bridge
