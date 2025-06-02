@@ -7,10 +7,10 @@ pipeline {
   }
 
   environment {
-    DOCKER_IMAGE = 'magnusdtd/jenkins-k8s'
-    DOCKER_TAG = "${env.BUILD_NUMBER}".replaceAll('[^a-zA-Z0-9_.-]', '_')
-    DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:${DOCKER_TAG}"
+    DOCKER_IMAGE = 'magnusdtd/jenkins-practice-app'
+    DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:lastest"
     DOCKER_REGISTRY_CREDENTIAL = 'dockerhub'
+
   }
 
   stages {
@@ -28,6 +28,7 @@ pipeline {
       steps {
         script {
           sh 'docker compose build'
+          sh 'docker images'
         }
       }
     }
@@ -35,37 +36,20 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         script {
-          echo 'Pushing Docker image to the registry...'
-          docker.withRegistry('', DOCKER_REGISTRY_CREDENTIAL) {
-            docker.image("${DOCKER_FULL_IMAGE}").push()
+            echo 'Pushing Docker image to the registry...'
+            sh 'docker tag jenkins-practice-app:latest ${DOCKER_IMAGE}:latest'
+            docker.withRegistry('', DOCKER_REGISTRY_CREDENTIAL) {
+              docker.image("${DOCKER_FULL_IMAGE}").push()
+            }
           }
         }
-      }
     }
 
     stage('Deploy to Google Kubernetes Engine') {
-      agent {
-        kubernetes {
-          yaml '''
-              apiVersion: v1
-              kind: Pod
-              spec:
-                containers:
-                - name: helm
-                  image: maggnusdtd/jenkins-k8s:lts-jdk17
-                  imagePullPolicy: Always
-                  command:
-                  - cat
-                  tty: true
-          '''
-        }
-      }
       steps {
         script {
-            container('helm') {
-                sh("kubectl apply -f ./k8s/namespace.yaml")
-                sh("kubectl apply -f ./k8s --recursive")
-            }
+            sh("kubectl apply -f ./k8s/namespace.yaml")
+            sh("kubectl apply -f ./k8s --recursive")
         }
       }
     }
