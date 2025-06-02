@@ -8,7 +8,7 @@ pipeline {
 
   environment {
     DOCKER_IMAGE = 'magnusdtd/jenkins-practice-app'
-    DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:lastest"
+    DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:latest"
     DOCKER_REGISTRY_CREDENTIAL = 'dockerhub'
   }
 
@@ -44,6 +44,22 @@ pipeline {
     }
 
     stage('Deploy to Google Kubernetes Engine') {
+      agent {
+        kubernetes {
+          yaml '''
+            apiVersion: v1
+            kind: Pod
+            spec:
+              containers:
+              - name: helm
+                image: magnusdtd/jenkins-k8s:latest
+                imagePullPolicy: Always
+                command:
+                - cat
+                tty: true
+          '''
+        }
+      }
       steps {
         script {
             sh("kubectl apply -f ./k8s/namespace.yaml")
