@@ -62,8 +62,9 @@ pipeline {
       }
       steps {
         script {
-            sh("kubectl apply -f ./k8s/namespace.yaml")
-            sh("kubectl apply -f ./k8s --recursive")
+          container('helm') {
+            sh("kubectl apply -f ./k8s -n model-serving")
+          }
         }
       }
     }
