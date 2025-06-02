@@ -1,6 +1,6 @@
 # https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-22-04
 - name: Deploy Jenkins
-  hosts: servers # Which host to apply, you can replace by `servers`, or by `servers_1, servers_2` for multiple groups
+  hosts: jenkins 
   become: yes # To run commands as a superuser (e.g., sudo)
   vars:
     default_container_name: jenkins-k8s

@@ -93,5 +93,5 @@ variable "user_name" {
   description = "Username for SSH access"
   type        = string
   sensitive   = true
-  default     = "admin"
+  default     = "magnusdtd"
 }

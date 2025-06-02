@@ -3,14 +3,14 @@
   vars:
     project_id: jenkins-practice-461513
     zone: us-central1-a
-    credentials_file: ../secrets/jenkins-practice-461513-95aff8dc117a.json
+    credentials_file: ./../secrets/jenkins-practice-461513-95aff8dc117a.json
     instance_name: jenkins-instance
-    machine_type: e2-standard-2
+    machine_type: n1-standard-2
     disk_name: disk-instance
     disk_size_gb: 50
     network_name: default
     source_image: projects/ubuntu-os-cloud/global/images/ubuntu-2204-jammy-v20230727
-    ssh_pub_key_file: ../secrets/jenkins_key.pub
+    ssh_pub_key_file: ./../secrets/jenkins_key.pub
 
   tasks:
     - name: Read SSH public key

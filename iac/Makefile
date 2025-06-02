@@ -5,6 +5,7 @@ SSH_KEY_PATH := $(SSH_KEY_DIR)/jenkins_key
 TERRAFORM_DIR := terraform
 ANSIBLE_DIR := ansible
 REQUIRED_DIRS := $(SSH_KEY_DIR) $(TERRAFORM_DIR) $(ANSIBLE_DIR)
+INVENTORY_FILE := $(ANSIBLE_DIR)/inventory/inventory.ini
 
 # Colors for output
 GREEN := \033[0;36m # Cyan
@@ -63,7 +64,7 @@ check-ssh-perms:
 genkey: check-dirs
 	@echo -e "$(GREEN)Generating SSH key pair...$(NC)"
 	@if [ ! -f $(SSH_KEY_PATH) ]; then \
-		ssh-keygen -t rsa -b 2048 -f $(SSH_KEY_PATH) -C "longhd" -N "" || { echo -e "$(RED)Failed to generate SSH key pair$(NC)"; exit 1; }; \
+		ssh-keygen -t rsa -b 2048 -f $(SSH_KEY_PATH) -C "magnusdtd" -N "" || { echo -e "$(RED)Failed to generate SSH key pair$(NC)"; exit 1; }; \
 		echo -e "$(GREEN)SSH key pair generated successfully$(NC)"; \
 	else \
 		echo -e "$(YELLOW)SSH key already exists at $(SSH_KEY_PATH)$(NC)"; \
@@ -78,32 +79,37 @@ genkey: check-dirs
 .PHONY: tf-init
 tf-init:
 	@echo -e "$(GREEN)Initializing Terraform...$(NC)"
-	cd $(TERRAFORM_DIR) && terraform init || { echo -e "$(RED)Failed to initialize Terraform$(NC)"; exit 1; }
+	cd $(TERRAFORM_DIR) && terraform init
 
 .PHONY: tf-plan
 tf-plan:
 	@echo -e "$(GREEN)Planning Terraform changes...$(NC)"
-	cd $(TERRAFORM_DIR) && terraform plan || { echo -e "$(RED)Failed to plan Terraform changes$(NC)"; exit 1; }
+	cd $(TERRAFORM_DIR) && terraform plan
 
 .PHONY: tf-apply
 tf-apply:
 	@echo -e "$(GREEN)Applying Terraform changes...$(NC)"
-	cd $(TERRAFORM_DIR) && terraform apply -auto-approve || { echo -e "$(RED)Failed to apply Terraform changes$(NC)"; exit 1; }
+	cd $(TERRAFORM_DIR) && terraform apply -auto-approve
 
 .PHONY: tf-destroy
 tf-destroy:
 	@echo -e "$(GREEN)Destroying Terraform resources...$(NC)"
-	cd $(TERRAFORM_DIR) && terraform destroy -auto-approve || { echo -e "$(RED)Failed to destroy Terraform resources$(NC)"; exit 1; }
+	cd $(TERRAFORM_DIR) && terraform destroy -auto-approve
 
 .PHONY: tf-fmt
 tf-fmt:
 	@echo -e "$(GREEN)Formatting Terraform files...$(NC)"
-	cd $(TERRAFORM_DIR) && terraform fmt -recursive || { echo -e "$(RED)Failed to format Terraform files$(NC)"; exit 1; }
+	cd $(TERRAFORM_DIR) && terraform fmt -recursive
 
 .PHONY: tf-validate
 tf-validate:
 	@echo -e "$(GREEN)Validating Terraform configuration...$(NC)"
-	cd $(TERRAFORM_DIR) && terraform validate || { echo -e "$(RED)Terraform validation failed$(NC)"; exit 1; }
+	cd $(TERRAFORM_DIR) && terraform validate
+
+.PHONY: tf-output
+tf-output:
+	@echo -e "${GREEN}Show Terraform outputs$(NC)"
+	cd $(TERRAFORM_DIR) && terraform output
 # ---------------------------------------------------------------------------------#
 
 # ---------------------------------------------------------------------------------#
@@ -112,7 +118,7 @@ tf-validate:
 .PHONY: ansible-deploy
 ansible-deploy:
 	@echo -e "$(GREEN)Running Ansible playbooks to create compute instance and deploy Jenkins...$(NC)"
-	ansible-playbook $(ANSIBLE_DIR)/create_compute_instance.yaml || { echo -e "$(RED)Failed to create compute instance$(NC)"; exit 1; }
-	ansible-playbook $(ANSIBLE_DIR)/deploy_jenkins.yaml || { echo -e "$(RED)Failed to deploy Jenkins$(NC)"; exit 1; }
+	ansible-playbook $(ANSIBLE_DIR)/create_compute_instance.yaml
+	ansible-playbook -i $(INVENTORY_FILE) $(ANSIBLE_DIR)/deploy_jenkins.yaml
 	@echo -e "$(GREEN)Ansible playbooks executed successfully$(NC)"
 # ---------------------------------------------------------------------------------#

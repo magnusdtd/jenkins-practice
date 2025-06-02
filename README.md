@@ -33,10 +33,38 @@ terraform --version
 # Continuous Integration/Continuous Deployment (CI/CD) with Jenkins and Ansible
 
 ## Generate SSH keys
-
+First make a folder names "secret" at path "iac/secrets". Then play your service acount credentials file. Update the `iac/terraform/variables.tf` and `iac/ansible/create_compute_instance.yaml` file with your credentials file name. After that, run the following commands:
 ```sh
-make generate-key 
+make genkey 
 ```
+
+## Use Terraform to setup cluster
+```sh
+cd iac
+make tf-init
+make tf-plan
+make tf-apply
+```
+
+## Create Jenkins server with Ansible playbook
+```sh
+make ansible-deploy
+```
+
+## Jenkins Installation
+Connect to GCE:
+```sh
+ssh -i secrets/jenkins_key <your username>@<GCE_EXTERNAL_IP>
+# The GCE_EXTERNAL_IP is in your iac/ansible/inventory/inventory.ini file
+```
+
+Access Jenkins UI:
+
+Retrieve password by run the following command: 
+```sh
+sudo docker exec jenkins-k8s cat /var/jenkins_home/secrets/initialAdminPassword
+```
+Navigate to http://[GCE_EXTERNAL_IP]:8080 and login.
 
 ## Run Jenkins server locally (optional)
 Then run the following command to get the password:
@@ -55,22 +83,22 @@ Install the following plugins to integrate Jenkins with Docker, Kubernetes, and 
 After installing the plugins, restart Jenkins or run the following command.
 ```sh
 sudo docker restart jenkins-k8s
-```
+``` 
 
 ## Configure Jenkins:
 
 ### Add webhooks to your GitHub repository to trigger Jenkins builds.
 
-Go to the GitHub repository and click on Settings. Click on Webhooks and then click on Add Webhook. Enter the URL of your Jenkins server (e.g. http://<EXTERNAL_IP>:8081/github-webhook/). Then click on Let me select individual events and select Let me select individual events. Select Push and Pull Request and click on Add Webhook.
+Go to the GitHub repository and click on Settings. Click on Webhooks and then click on Add Webhook. Enter the URL of your Jenkins server (e.g. http://<EXTERNAL_IP>:8080/github-webhook/). Then click on Let me select individual events and select Let me select individual events. Select Push and Pull Request and click on Add Webhook.
 
 
 ### Add Github repository as a Jenkins source code repository.
 
-Go to Jenkins dashboard and click on New Item. Enter a name for your project and select Multibranch Pipeline. Click on OK. Click on Configure and then click on Add Source. Select GitHub and click on Add. Enter the URL of your GitHub repository. In the Credentials field, select Add and select Username with password. Enter your GitHub username and password (or use a personal access token). Click on Test Connection and then click on Save.
+Go to Jenkins dashboard and click on New Item. Enter a name for your project and select Multibranch Pipeline. Click on OK. In the Branch Sources section, click on Add Source then select GitHub. Enter the URL of your GitHub repository. In the Credentials field, select Add and select Username with password. Enter your GitHub username and password (or use a personal access token). Click on Test Connection and then click on Save.
 
 ### Setup docker hub credentials.
 
-Create a new repository in Docker Hub
+Create a new repository in Docker Hub.
 
 From Jenkins dashboard, go to Manage Jenkins > Credentials. Click on Add Credentials. Select Username with password and click on Add. Enter your Docker Hub username, access token, and set ID to dockerhub.
 
