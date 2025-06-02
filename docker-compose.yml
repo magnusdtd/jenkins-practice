@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./app/Dockerfile
+    image: magnusdtd/jenkins-practice-app:latest
+    container_name: jenkins-practice-app
     ports:
       - "8000:8000"
     networks:

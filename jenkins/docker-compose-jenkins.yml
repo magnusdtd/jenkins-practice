@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: magnusdtd/jenkins-k8s:latest
     container_name: jenkins-k8s
     restart: unless-stopped
     privileged: true

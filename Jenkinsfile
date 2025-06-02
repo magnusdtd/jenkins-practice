@@ -10,7 +10,6 @@ pipeline {
     DOCKER_IMAGE = 'magnusdtd/jenkins-practice-app'
     DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:lastest"
     DOCKER_REGISTRY_CREDENTIAL = 'dockerhub'
-
   }
 
   stages {
@@ -37,7 +36,6 @@ pipeline {
       steps {
         script {
             echo 'Pushing Docker image to the registry...'
-            sh 'docker tag jenkins-practice-app:latest ${DOCKER_IMAGE}:latest'
             docker.withRegistry('', DOCKER_REGISTRY_CREDENTIAL) {
               docker.image("${DOCKER_FULL_IMAGE}").push()
             }
