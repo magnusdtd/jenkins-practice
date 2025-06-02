@@ -23,7 +23,7 @@ spec:
         - name: SESSION_SECRET_KEY
           value: thisisasecretkey
         - name: IS_DOCKER_CONTAINER
-          value: yes
+          value: "yes"
 ---
 apiVersion: v1
 kind: Service

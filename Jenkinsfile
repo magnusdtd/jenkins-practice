@@ -8,8 +8,8 @@ pipeline {
 
   environment {
     DOCKER_IMAGE = 'magnusdtd/jenkins-k8s'
-    DOCKER_TAG = "${env.BUILD_NUMBER}"
-    DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:{DOCKER_TAG}"
+    DOCKER_TAG = "${env.BUILD_NUMBER}".replaceAll('[^a-zA-Z0-9_.-]', '_')
+    DOCKER_FULL_IMAGE = "${DOCKER_IMAGE}:${DOCKER_TAG}"
     DOCKER_REGISTRY_CREDENTIAL = 'dockerhub'
   }
 

@@ -108,3 +108,25 @@ From Jenkins dashboard, go to Manage Jenkins > Credentials. Click on Add Credent
 First, create a Service Account for the Jenkins server to access the GKE cluster. Go to the GCP console and navigate to IAM & Admin > Service Accounts. Create a new service account with the Kubernetes Engine Admin role. Give the service account a name and description. Click on the service account and then click on the Keys tab. Click on Add Key and select JSON as the key type. Click on Create and download the JSON file.
 
 Then, from Jenkins dashboard, go to Manage Jenkins > Cloud. Click on New cloud. Select Kubernetes. Enter the name of your cluster, enter the URL and Certificate from your GKE cluster. In the Kubernetes Namespace, enter the namespace of your cluster. In the Credentials field, select Add and select Google Service Account from private`. Enter your project-id and the path to the JSON file.
+
+
+# Helm Chart
+## Install Helm
+
+```sh
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+Add repositories for charts, e.g., the official stable repository:
+```sh
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+```
+
+
+# Resources
+- [Helm Chart Docs](https://helm.sh/docs/intro/quickstart/)
+- [Ansible Docs](https://docs.ansible.com/ansible/latest/index.html)
+- [Terraform Docs](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started)
+- [ChatOpsLLM: Effortless MLOps for Powerful Language Models](https://github.com/bmd1905/ChatOpsLLM)
+- [Face Detection ML System](https://github.com/DucLong06/face-detection-ml-system)
