@@ -9,9 +9,9 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "nginx-ingress.fullname" . }}
+  name: nginx-ingress-role
 subjects:
 - kind: ServiceAccount
-  name: {{ include "nginx-ingress.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
+  name: default
+  namespace: model-serving
 {{- end }}
