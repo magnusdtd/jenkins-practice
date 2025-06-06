@@ -5,13 +5,13 @@ metadata:
   name: {{ include "nginx-ingress.fullname" . }}
   labels:
     {{- include "nginx-ingress.labels" . | nindent 4 }}
-  namespace: {{ .Release.Namespace }}
+  namespace: model-serving
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: nginx-ingress-role
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: {{ include "nginx-ingress.serviceAccountName" . }}
   namespace: model-serving
 {{- end }}
