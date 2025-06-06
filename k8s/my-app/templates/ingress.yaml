@@ -8,6 +8,8 @@ metadata:
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
+    kubernetes.io/ingress.class: "gce"
+    nginx.ingress.kubernetes.io/rewrite-target: /
   {{- end }}
 spec:
   {{- with .Values.ingress.className }}
@@ -40,4 +42,14 @@ spec:
                   number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
+    - host: "jenkins-practice.com"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ include "my-app.fullname" $ }}
+                port:
+                  number: 8000
 {{- end }}

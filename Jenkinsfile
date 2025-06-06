@@ -64,7 +64,6 @@ pipeline {
         script {
           container('helm') {
               sh '''
-              helm upgrade --install nginx-ingress ./k8s/nginx-ingress -n model-serving
               helm upgrade --install my-app ./k8s/my-app -n model-serving
               '''
           }

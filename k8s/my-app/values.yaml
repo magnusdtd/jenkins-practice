@@ -59,18 +59,18 @@ service:
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
-  className: ""
   annotations:
+    kubernetes.io/ingress.class: "gce"
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: 
+    - host: "jenkins-practice.com"
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: "example-tls"
+      hosts:
+        - "jenkins-practice.com"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
