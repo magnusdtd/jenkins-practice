@@ -27,5 +27,13 @@ clean:
 	find app -type d -name "__pycache__" -exec rm -rf {} +
 	@echo "Removing virtual environment..."
 	rm -rf .venv
+	@echo "Removing pytest cache..."
+	rm -rf app/.pytest_cache
 
+.PHONY: test
+test:
+	@echo "Installing test dependencies..."
+	. .venv/bin/activate && pip install -r tests/requirements.txt
+	@echo "Running tests..."
+	. .venv/bin/activate && pytest tests/test_app.py
 

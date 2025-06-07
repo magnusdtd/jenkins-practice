@@ -18,7 +18,7 @@ pipeline {
       steps {
         script {
           echo 'Running tests...'
-          // I will add tests later
+          sh 'make install && make test'
         }
       }
     }

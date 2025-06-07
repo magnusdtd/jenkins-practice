@@ -49,10 +49,10 @@ class App:
     with open("templates/index.html", "r") as file:
       return file.read()
 
-  def upload_file(self, file: UploadFile = File(...)):
-    if not file:
+  def upload_file(self, file: UploadFile = File(None)):
+    if file is None or file.file is None:
         raise HTTPException(status_code=400, detail="No file uploaded")
-    if file.filename == '':
+    if file.filename is None or file.filename.strip() == '':
         raise HTTPException(status_code=400, detail="No file selected")
     
     input_image = Image.open(file.file)

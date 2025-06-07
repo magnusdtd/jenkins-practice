@@ -1,0 +1,9 @@
+pytest==8.4.0
+httpx==0.28.1
+
+fastapi==0.115.12
+rembg==2.0.66
+pillow==11.2.1
+onnxruntime==1.22.0
+python-multipart==0.0.20
+uvicorn[standard]==0.34.2
