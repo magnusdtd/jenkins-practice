@@ -1,31 +1,44 @@
 # **Deploying a rembg model to GKE using Jenkins, Terraform, Ansible, Helm Chart** 
 - [**Sections**](#deploying-a-rembg-model-to-gke-using-jenkins-terraform-ansible-helm-chart)
   - [I. Introduction](#i-introduction)
-  - [II. Run the app locally with Docker compose](#ii-run-the-app-locally-with-docker-compose)
-  - [III. Setup GKE cluster](#iii-setup-gke-cluster)
+  - [II. Run the app locally without Docker compose](#ii-run-the-app-locally-without-docker-compose)
+  - [III. Run the app locally with Docker compose](#iii-run-the-app-locally-with-docker-compose)
+  - [IV. Setup GKE cluster](#iv-setup-gke-cluster)
       - [1. Install Terraform](#1-install-terraform)
       - [2. Generate SSH keys](#2-generate-ssh-keys)
       - [3. Use Terraform to setup cluster](#3-use-terraform-to-setup-cluster)
       - [4. Create deployments in GKE cluster](#4-create-deployments-in-gke-cluster)
-  - [IV. Continuous Integration/Continuous Deployment (CI/CD) with Jenkins and Ansible](#iv-continuous-integrationcontinuous-deployment-cicd-with-jenkins-and-ansible)
+  - [V. Continuous Integration/Continuous Deployment (CI/CD) with Jenkins and Ansible](#v-continuous-integrationcontinuous-deployment-cicd-with-jenkins-and-ansible)
       - [1. Create Jenkins server with Ansible playbook](#1-create-jenkins-server-with-ansible-playbook)
       - [2. Jenkins Installation](#2-jenkins-installation)
       - [3. Install Jenkins Plugins](#3-install-jenkins-plugins)
       - [4. Configure Jenkins](#4-configure-jenkins)
       - [5. Trigger to run Jenkins pipeline](#5-trigger-to-run-jenkins-pipeline)
-  - [V. Resources](#v-resources)
+  - [VI. Resources](#vi-resources)
+
+## System architecture
+
+![System Architecture](img/system-architecture.jpg)
+
 
 ## I. Introduction
 This document provides a comprehensive guide on deploying a **rembg** model to **Google Kubernetes Engine (GKE)** using **Jenkins, Terraform, Ansible**, and **Helm Chart**. The **rembg** model is a powerful tool for removing backgrounds from images, and deploying it on **GKE** allows for scalable and efficient image processing. This guide will take you through the necessary steps to set up the infrastructure, deploy the model, and configure continuous integration and deployment (CI/CD) pipelines for automated deployments.
 
-## II. Run the app locally with Docker compose
+### II. Run the app locally without Docker compose
+At root level of the repo, run the following command to run the app.
+```sh
+make install
+make run
+```
+
+## III. Run the app locally with Docker compose
 The app use a [rembg model](https://github.com/danielgatis/rembg) to remove the back ground of the input image. Use docker compose to run the app
 
 ```sh
 docker compose up --build
 ```
 
-## III. Setup GKE cluster
+## IV. Setup GKE cluster
 
 ### 1. Install Terraform
 
@@ -86,7 +99,7 @@ helm upgrade --install my-app ./k8s/my-app
 ```
 
 
-## IV. Continuous Integration/Continuous Deployment (CI/CD) with Jenkins and Ansible
+## V. Continuous Integration/Continuous Deployment (CI/CD) with Jenkins and Ansible
 
 ### 1. Create Jenkins server with Ansible playbook
 ```sh
@@ -151,8 +164,9 @@ openssl s_client -connect <CLUSTER_ENDPOINT>:443 -showcerts </dev/null 2>/dev/nu
 ### 5. Trigger to run Jenkins pipeline
 After adding credentials, push a commit to the repo to see what happen.
 
-## V. Resources
+## VI. Resources
 - [Ansible Docs](https://docs.ansible.com/ansible/latest/index.html)
 - [Terraform Docs](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started)
 - [ChatOpsLLM: Effortless MLOps for Powerful Language Models](https://github.com/bmd1905/ChatOpsLLM)
 - [Face Detection ML System](https://github.com/DucLong06/face-detection-ml-system)
+- [End To End Agentic RAG Workflow for Answering Vietnamese Legal Traffic questions](https://github.com/meowwkhoa/End-To-End-Agentic-RAG-Workflow-for-Answering-Vietnamese-Legal-Traffic-questions)

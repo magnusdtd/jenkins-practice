@@ -38,7 +38,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -54,11 +54,16 @@ spec:
               port: 8000
           resources:
             limits:
-              cpu: "500m"
-              memory: "256Mi"
+              cpu: "2000m"
+              memory: "8Gi"
             requests:
               cpu: "250m"
-              memory: "128Mi"
+              memory: "1Gi"
+          env:
+            - name: SESSION_SECRET_KEY
+              value: {{ .Values.env.SESSION_SECRET_KEY | quote }}
+            - name: IS_DOCKER_CONTAINER
+              value: {{ .Values.env.IS_DOCKER_CONTAINER | quote }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}

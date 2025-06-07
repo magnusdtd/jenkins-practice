@@ -4,11 +4,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from rembg import remove
 from PIL import Image
 from io import BytesIO
-import os
+import os, anyio
+from fastapi.responses import ORJSONResponse
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    limiter = anyio.to_thread.current_default_thread_limiter()
+    limiter.total_tokens = 1000
+    yield
 
 class App:
   def __init__(self):
-    self.app = FastAPI()
+    self.app = FastAPI(lifespan=lifespan, default_response_class = ORJSONResponse)
     self._setup_routes()
 
     self.app.add_middleware(
